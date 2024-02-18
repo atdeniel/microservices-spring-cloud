@@ -7,7 +7,7 @@ CREATE TABLE invoices (
       state VARCHAR(255)
 );
 
-CREATE TABLE InvoiceItem (
+CREATE TABLE invoce_items (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      quantity DOUBLE CHECK (quantity > 0),
      price DOUBLE,
