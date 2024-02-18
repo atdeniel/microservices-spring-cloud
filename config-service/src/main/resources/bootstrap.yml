@@ -6,11 +6,11 @@ spring:
     config:
       server:
         git:
-          uri: http://
-          searchPath: config-data
+          uri: https://github.com/atdeniel/microservices-spring-cloud.git
+          searchPaths: config-data
           username: ${GIT_USER}
           password: ${GIT_PASSWORD}
   security:
     user:
       name: root
-      password: secret
+      password: s3cr3t
