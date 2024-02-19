@@ -32,6 +32,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     CustomerClient customerClient;
 
+    @Qualifier("atdeniel.serviceshopping.client.ProductClient")
     @Autowired
     ProductClient productClient;
 
