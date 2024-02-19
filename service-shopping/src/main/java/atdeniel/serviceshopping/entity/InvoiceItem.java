@@ -23,7 +23,6 @@ public class InvoiceItem  {
     @Column(name = "product_id")
     private Long productId;
 
-
     @Transient // can use like a pojo but it is not a database table
     private Double subTotal;
 

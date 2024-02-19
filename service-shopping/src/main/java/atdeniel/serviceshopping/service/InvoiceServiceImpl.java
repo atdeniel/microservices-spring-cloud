@@ -2,6 +2,7 @@ package atdeniel.serviceshopping.service;
 
 import atdeniel.serviceshopping.client.CustomerClient;
 import atdeniel.serviceshopping.client.ProductClient;
+
 import atdeniel.serviceshopping.entity.InvoiceItem;
 import atdeniel.serviceshopping.model.Customer;
 import atdeniel.serviceshopping.model.Product;
@@ -10,6 +11,7 @@ import atdeniel.serviceshopping.repository.InvoiceRepository;
 import atdeniel.serviceshopping.entity.Invoice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 
@@ -26,6 +28,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     InvoiceItemsRepository invoiceItemsRepository;
 
+    @Qualifier("atdeniel.serviceshopping.client.CustomerClient")
+    @Autowired
+    CustomerClient customerClient;
+
+    @Autowired
+    ProductClient productClient;
+
 
     @Override
     public List<Invoice> findInvoiceAll() {
@@ -41,6 +50,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
         invoice.setState("CREATED");
         invoiceDB = invoiceRepository.save(invoice);
+
+        invoiceDB.getItems().forEach( invoiceItem -> {
+            productClient.updateStockProduct(invoiceItem.getId(), invoiceItem.getQuantity() * -1);
+        });
 
         return invoiceDB;
     }
@@ -75,6 +88,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice getInvoice(Long id) {
 
         Invoice invoice= invoiceRepository.findById(id).orElse(null);
+
+        if (null != invoice){
+            Customer customer = customerClient.getCustomer((invoice.getCustomerId())).getBody();
+            invoice.setCustomer(customer);
+            List<InvoiceItem> listItem = invoice.getItems().stream().map( invoiceItem -> {
+                Product product = productClient.getProduct(invoiceItem.getProductId()).getBody();
+                invoiceItem.setProduct(product);
+                return invoiceItem;
+            }).toList();
+            invoice.setItems(listItem);
+        }
         return invoice ;
     }
 }

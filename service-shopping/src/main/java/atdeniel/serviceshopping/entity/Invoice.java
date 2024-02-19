@@ -16,7 +16,6 @@ import java.util.List;
 @Table(name = "invoices")
 public class Invoice {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,8 +31,6 @@ public class Invoice {
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     private Date createAt;
-
-
 
     @Valid
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
